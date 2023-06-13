@@ -25,10 +25,7 @@ const incidentSchema = new mongoose.Schema({
   reason: String,
   dateCreated: Date,
   deathDate: Date,
-  geometry: {
-    type: String,
-    coordinates: mongoose.Schema.Types.Mixed,
-  },
+  geometry: mongoose.Schema.Types.Mixed
 });
 
 // Creating a model based on the incidentSchema to perform CRUD operations on the incidents collection.
@@ -135,6 +132,6 @@ app.get('/incidents', (req, res) => {
 
 
 // Starting the Express server on port 3004.
-app.listen(3004, () => {
+app.listen(3006, () => {
   console.log('Server started on port 3004');
 });
