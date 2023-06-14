@@ -35,6 +35,54 @@ const collectionName = "incidents";
 
 // Implementing the CRUD operations for the "/incidents" route.
 
+// Retrieve incidents within a certain radius
+app.get('/incidents', (req, res) => {
+  const { latitude, longitude, radius } = req.query;
+
+  // Validate query parameters
+  if (!latitude || !longitude || !radius) {
+    // Retrieve all incidents if no params
+    Incident.find({})
+    .then((incidents) => {
+      res.json(incidents);
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({ error: err });
+    });
+  } else {
+    const centerPoint = {
+      type: 'Point',
+      coordinates: [parseFloat(longitude), parseFloat(latitude)],
+    };
+  
+    // Converting the radius from kilometers to meters.
+    const radiusInMeters = parseFloat(radius) * 1000;
+  
+    const currentDate = new Date().toISOString().split('T')[0];
+  
+    // Using the $near operator to find incidents that are within a certain radius from the provided coordinates.
+    Incident.find({
+      geometry: {
+        $near: {
+          $geometry: centerPoint,
+          $maxDistance: radiusInMeters,
+        },
+      },
+      $expr: {
+        $gt: [{ $toDate: '$deathDate' }, currentDate]
+      }
+    })
+      .then((incidents) => {
+        res.json(incidents);
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err });
+      });
+  }
+});
+
+
 // Retrieve all incidents
 app.get('/incidents', (req, res) => {
   Incident.find({})
@@ -95,48 +143,8 @@ app.delete('/incidents/:id', (req, res) => {
     });
 });
 
-// Retrieve incidents within a certain radius
-app.get('/incidents', (req, res) => {
-  const { latitude, longitude, radius } = req.query;
-
-  // Validate query parameters
-  if (!latitude || !longitude || !radius) {
-    return res.status(400).json({ error: 'Latitude, longitude, and radius are required query parameters.' });
-  }
-
-  const centerPoint = {
-    type: 'Point',
-    coordinates: [parseFloat(longitude), parseFloat(latitude)],
-  };
-
-  // Converting the radius from kilometers to meters.
-  const radiusInMeters = parseFloat(radius) * 1000;
-
-  const currentDate = new Date();
-
-  // Using the $near operator to find incidents that are within a certain radius from the provided coordinates.
-  Incident.find({
-    geometry: {
-      $near: {
-        $geometry: centerPoint,
-        $maxDistance: radiusInMeters,
-      },
-    },
-    $expr: {
-      $gt: [{ $toDate: '$deathDate' }, currentDate]
-    }
-  })
-    .exec((err, incidents) => {
-      if (err) {
-        res.status(500).json({ error: err });
-      } else {
-        res.json(incidents);
-      }
-    });
-});
-
 
 // Starting the Express server on port 3004.
-app.listen(3004, () => {
+app.listen(3010, () => {
   console.log('Server started on port 3004');
 });
