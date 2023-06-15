@@ -215,6 +215,85 @@ app.delete('/VerificationCodes/:id', (req, res) => {
 		});
 });
 
+// Rout by account information
+const accountInfoSchema = new mongoose.Schema(
+	{
+	  email: String,
+	  fullName: String,
+	  userName: String,
+	  deathDate: Date
+	},
+	{
+	  versionKey: false
+	}
+  );
+  
+  // Model of the accountInfoSchema
+  const AccountInfo = mongoose.model(
+	'AccountInfo', accountInfoSchema
+  );
+  
+  // Get all data from AccountInfo collection
+  app.get('/accountInfo', (req, res) => {
+	  AccountInfo.find({})
+		.then((accountInfo) => {
+		  res.json(accountInfo);
+		})
+		.catch((err) => {
+		  res.status(500).json({ error: err });
+		});
+	});
+	
+	// Save data in AccountInfo collection
+	app.post('/accountInfo', (req, res) => {
+	  const accountInfo = new AccountInfo(req.body);
+	  accountInfo
+		.save()
+		.then((savedAccountInfo) => {
+		  res.json(savedAccountInfo);
+		})
+		.catch((err) => {
+		  res.status(500).json({ error: err });
+		});
+	});
+	
+	// Find a specific data in AccountInfo collection
+	app.get('/accountInfo/:id', (req, res) => {
+	  AccountInfo.findById(req.params.id)
+		.then((accountInfo) => {
+		  if (accountInfo) {
+			res.json(accountInfo);
+		  } else {
+			res.status(404).json({ error: 'Account information not found' });
+		  }
+		})
+		.catch((err) => {
+		  res.status(500).json({ error: err });
+		});
+	});
+	
+	// Update a specific data in AccountInfo collection
+	app.put('/accountInfo/:id', (req, res) => {
+	  AccountInfo.findByIdAndUpdate(req.params.id, req.body, { new: true })
+		.then((accountInfo) => {
+		  res.json(accountInfo);
+		})
+		.catch((err) => {
+		  res.status(500).json({ error: err });
+		});
+	});
+	
+	// Delete a specific data in AccountInfo collection
+	app.delete('/accountInfo/:id', (req, res) => {
+	  AccountInfo.findByIdAndDelete(req.params.id)
+		.then(() => {
+		  res.json({ message: 'Account information deleted' });
+		})
+		.catch((err) => {
+		  res.status(500).json({ error: err });
+		});
+	});
+	
 // Starting the Express server on port 3006.
 app.listen(3006, () => {
 	console.log('server on port 3006');
