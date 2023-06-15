@@ -46,7 +46,6 @@ const collectionName = 'incidents';
 // Implementing the CRUD operations for the "/incidents" route.
 
 // Retrieve all incidents
-// localhost:3006/incidents?longitude=-66.17591084420748&latitude=-17.36636997318388&radius=0.10
 app.get('/incidents', async (request, response) => {
 	let incidents = [];
 	const { longitude, latitude, radius } = request.query;
@@ -116,42 +115,6 @@ app.delete('/incidents/:id', (req, res) => {
 			res.status(500).json({ error: err });
 		});
 });
-
-// Retrieve incidents within a certain radius
-// app.get('/incidents', (req, res) => {
-// 	const { latitude, longitude, radius } = req.query;
-
-// 	// Validate query parameters
-// 	if (!latitude || !longitude || !radius) {
-// 		return res.status(400).json({
-// 			error: 'Latitude, longitude, and radius are required query parameters.'
-// 		});
-// 	}
-
-// 	const centerPoint = {
-// 		type: 'Point',
-// 		coordinates: [parseFloat(longitude), parseFloat(latitude)]
-// 	};
-
-// 	// Converting the radius from kilometers to meters.
-// 	const radiusInMeters = parseFloat(radius) * 1000;
-
-// 	// Using the $near operator to find incidents that are within a certain radius from the provided coordinates.
-// 	Incident.find({
-// 		geometry: {
-// 			$near: {
-// 				$geometry: centerPoint,
-// 				$maxDistance: radiusInMeters
-// 			}
-// 		}
-// 	}).exec((err, incidents) => {
-// 		if (err) {
-// 			res.status(500).json({ error: err });
-// 		} else {
-// 			res.json(incidents);
-// 		}
-// 	});
-// });
 
 // Starting the Express server on port 3004.
 app.listen(3006, () => {
