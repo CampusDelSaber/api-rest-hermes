@@ -1,5 +1,11 @@
 import Incident from '../../models/Incident.js';
 
+/**
+ * Saves a new incident.
+ * 
+ * @param {*} request - The request object.
+ * @param {*} response - The response object.
+ */
 export const saveNewIncident = async (request, response) => {
 	const incident = new Incident(request.body);
 	try {
@@ -10,6 +16,12 @@ export const saveNewIncident = async (request, response) => {
 	}
 };
 
+/**
+ * Edits an incident by its ID.
+ * 
+ * @param {*} request - The request object.
+ * @param {*} response - The response object.
+ */
 export const editIncidentById = async (request, response) => {
 	try {
 		await Incident.findByIdAndUpdate(request.params.id, request.body, {
@@ -21,6 +33,12 @@ export const editIncidentById = async (request, response) => {
 	}
 };
 
+/**
+ * Deletes an incident by its ID.
+ * 
+ * @param {*} request - The request object.
+ * @param {*} response - The response object.
+ */
 export const deleteIncidentById = async (request, response) => {
 	try {
 		await Incident.findByIdAndDelete(request.params.id);
@@ -30,6 +48,9 @@ export const deleteIncidentById = async (request, response) => {
 	}
 };
 
+/**
+ * Deletes incidents with death dates earlier than the current date.
+ */
 export const deleteDeathIncidents = async () => {
 	const currentDate = new Date();
 	await Incident.deleteMany({
