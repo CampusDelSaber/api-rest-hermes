@@ -1,0 +1,31 @@
+import VerificationCode from '../../models/VerificationCode.js';
+
+export const saveNewCode = async (request, response) => {
+	const newCode = new VerificationCode(request.body);
+	try {
+		await newCode.save();
+		response.sendStatus(200);
+	} catch (error) {
+		response.sendStatus(500);
+	}
+};
+
+export const editCodeById = async (request, response) => {
+	try {
+		await VerificationCode.findByIdAndUpdate(request.params.id, request.body, {
+			new: true
+		});
+		response.sendStatus(200);
+	} catch (error) {
+		response.sendStatus(500);
+	}
+};
+
+export const deleteCodeById = async (request, response) => {
+	try {
+		await VerificationCode.findByIdAndDelete(request.params.id);
+		response.sendStatus(200);
+	} catch (error) {
+		response.sendStatus(500);
+	}
+};
