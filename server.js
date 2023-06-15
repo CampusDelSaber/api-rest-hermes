@@ -30,13 +30,18 @@ app.get('/', (req, res) => {
 });
 
 // Creating a route handler for the root URL ("/") that sends a JSON response.
-const incidentSchema = new mongoose.Schema({
-	type: String,
-	reason: String,
-	dateCreated: Date,
-	deathDate: Date,
-	geometry: mongoose.Schema.Types.Mixed
-});
+const incidentSchema = new mongoose.Schema(
+	{
+		type: String,
+		reason: String,
+		dateCreated: Date,
+		deathDate: Date,
+		geometry: mongoose.Schema.Types.Mixed
+	},
+	{
+		versionKey: false
+	}
+);
 
 // Creating a model based on the incidentSchema to perform CRUD operations on the incidents collection.
 const Incident = mongoose.model('Incident', incidentSchema);
@@ -48,20 +53,37 @@ app.get('/incidents', async (request, response) => {
 	let incidents = [];
 	const { longitude, latitude, radius } = request.query;
 
+	await deleteDeathIncidents();
 	if (longitude && latitude && radius) {
-		const referenceCoordinate = [parseFloat(longitude), parseFloat(latitude)];
-		const maxDistanceRadius = parseFloat(radius);
-		incidents = await Incident.find({
-			'geometry.coordinates': {
-				$near: referenceCoordinate,
-				$maxDistance: maxDistanceRadius
-			}
-		});
+		try {
+			const referenceCoordinate = [parseFloat(longitude), parseFloat(latitude)];
+			const maxDistanceRadius = parseFloat(radius);
+			incidents = await Incident.find({
+				'geometry.coordinates': {
+					$near: referenceCoordinate,
+					$maxDistance: maxDistanceRadius
+				}
+			});
+		} catch (err) {
+			response.status(500).json({ err });
+		}
 	} else {
 		incidents = await Incident.find();
 	}
 
 	response.json(incidents);
+});
+
+const deleteDeathIncidents = async () => {
+	const currentDate = new Date();
+
+	await Incident.deleteMany({
+		deathDate: { $lt: currentDate }
+	});
+};
+
+app.delete('/incidents', async (request, response) => {
+	await deleteDeathIncidents();
 });
 
 // Create a new incident
@@ -115,11 +137,16 @@ app.delete('/incidents/:id', (req, res) => {
 });
 
 // Route by Verification codes
-const verificationCodesSchema = new mongoose.Schema({
-	email: String,
-	verificationCode: String,
-	deathDate: Date
-});
+const verificationCodesSchema = new mongoose.Schema(
+	{
+		email: String,
+		verificationCode: String,
+		deathDate: Date
+	},
+	{
+		versionKey: false
+	}
+);
 
 //Model of VerificationCodesSchema
 const VerificationCodes = mongoose.model(
