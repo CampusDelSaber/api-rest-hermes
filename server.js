@@ -141,7 +141,7 @@ const verificationCodesSchema = new mongoose.Schema(
 	{
 		email: String,
 		verificationCode: String,
-		deathDate: Date
+		isValid: Boolean
 	},
 	{
 		versionKey: false
@@ -191,6 +191,23 @@ app.get('/VerificationCodes/:id', (req, res) => {
 		.catch((err) => {
 			res.status(500).json({ error: err });
 		});
+});
+
+// Find a specific data in VerificationCodes collection using EMAIL
+app.get('/VerificationCodes/email/:email', (req, res) => {
+  const email = req.params.email;
+  
+  VerificationCodes.find({ email: email })
+    .then((verificationCodes) => {
+      if (verificationCodes.length > 0) {
+        res.json(verificationCodes);
+      } else {
+        res.status(404).json({ error: 'Verification code not found' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err });
+    });
 });
 
 // Update a specific data in VerificationCodes collection
