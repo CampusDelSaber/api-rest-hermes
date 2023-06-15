@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { sendHomePage } from '../controller/responses/indexRes.js';
 
-const homeRouter = Router();
+const indexRouter = Router();
 
-homeRouter.get('/', sendHomePage);
+indexRouter.get('/', sendHomePage);
 
-export default homeRouter;
+export default indexRouter;
