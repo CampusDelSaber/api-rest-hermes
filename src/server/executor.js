@@ -1,6 +1,9 @@
 import { connectToDatabase } from '../database/connection.js';
 import serverApp from './settings.js';
 
+/**
+ * Method to start the server.
+ */
 export const startServer = async () => {
 	const port = serverApp.get('port');
 

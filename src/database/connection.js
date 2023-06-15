@@ -4,6 +4,9 @@ set('strictQuery', true);
 const MONGO_URI =
 	'mongodb+srv://hermesmapapp:jzFAZXVdzEyCfHwh@hermes-cluster.qqt9zti.mongodb.net/hermesmapdb?retryWrites=true&w=majority';
 
+/**
+ * Method to connect server to the database.
+ */
 export const connectToDatabase = async () => {
 	await connect(MONGO_URI, {
 		useNewUrlParser: true,
