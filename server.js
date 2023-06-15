@@ -44,8 +44,6 @@ const Incident = mongoose.model('Incident', incidentSchema);
 const collectionName = 'incidents';
 
 // Implementing the CRUD operations for the "/incidents" route.
-
-// Retrieve all incidents
 app.get('/incidents', async (request, response) => {
 	let incidents = [];
 	const { longitude, latitude, radius } = request.query;
@@ -116,7 +114,81 @@ app.delete('/incidents/:id', (req, res) => {
 		});
 });
 
-// Starting the Express server on port 3004.
+// Route by Verification codes
+const verificationCodesSchema = new mongoose.Schema({
+	email: String,
+	verificationCode: String,
+	deathDate: Date
+});
+
+//Model of VerificationCodesSchema
+const VerificationCodes = mongoose.model(
+	'VerificationCodes',
+	verificationCodesSchema
+);
+
+// Get all data from VerificationCodes collection
+app.get('/VerificationCodes', (req, res) => {
+	VerificationCodes.find({})
+		.then((verificationCodes) => {
+			res.json(verificationCodes);
+		})
+		.catch((err) => {
+			res.status(500).json({ error: err });
+		});
+});
+
+// Save data in VerificationCodes collection
+app.post('/VerificationCodes', (req, res) => {
+	const verificationCodes = new VerificationCodes(req.body);
+	verificationCodes
+		.save()
+		.then((savedVerificationCode) => {
+			res.json(savedVerificationCode);
+		})
+		.catch((err) => {
+			res.status(500).json({ error: err });
+		});
+});
+
+// Find a specific data in VerificationCodes collection
+app.get('/VerificationCodes/:id', (req, res) => {
+	VerificationCodes.findById(req.params.id)
+		.then((verificationCode) => {
+			if (verificationCode) {
+				res.json(verificationCode);
+			} else {
+				res.status(404).json({ error: 'Verification code not found' });
+			}
+		})
+		.catch((err) => {
+			res.status(500).json({ error: err });
+		});
+});
+
+// Update a specific data in VerificationCodes collection
+app.put('/VerificationCodes/:id', (req, res) => {
+	VerificationCodes.findByIdAndUpdate(req.params.id, req.body, { new: true })
+		.then((verificationCode) => {
+			res.json(verificationCode);
+		})
+		.catch((err) => {
+			res.status(500).json({ error: err });
+		});
+});
+
+// Delete a specific data in VerificationCodes collection
+app.delete('/VerificationCodes/:id', (req, res) => {
+	VerificationCodes.findByIdAndDelete(req.params.id)
+		.then(() => {
+			res.json({ message: 'Verification code deleted ' });
+		})
+		.catch((err) => {
+			res.status(500).json({ error: err });
+		});
+});
+
+// Starting the Express server on port 3006.
 app.listen(3006, () => {
-	console.log('Server on port 3006');
+	console.log('server on port 3006');
 });
