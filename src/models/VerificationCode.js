@@ -2,9 +2,16 @@ import { Schema, model } from 'mongoose';
 
 const VerificationCodeSchema = new Schema(
 	{
-		email: String,
-		verificationCode: String,
-		deathDate: Date
+		email: {
+			type: String,
+			required: true
+		},
+		verificationCode: {
+			type: String
+		},
+		isValid: {
+			type: Boolean
+		}
 	},
 	{
 		versionKey: false
