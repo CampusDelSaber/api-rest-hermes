@@ -1,5 +1,8 @@
 import { Router } from 'express';
-import { sendAllCodes } from '../controller/responses/verificationCodeRes.js';
+import {
+	sendAllCodes,
+	sendCodeById
+} from '../controller/responses/verificationCodeRes.js';
 import {
 	deleteCodeById,
 	editCodeById,
@@ -8,9 +11,9 @@ import {
 
 const codeRouter = Router();
 
-codeRouter.get('/codes', sendAllCodes);
-
 codeRouter.get('/verificationCodes', sendAllCodes);
+
+codeRouter.get('/verificationCodes/:id', sendCodeById);
 
 codeRouter.post('/verificationCodes', saveNewCode);
 

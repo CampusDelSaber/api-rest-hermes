@@ -17,7 +17,7 @@ export const sendAllCodes = async (request, response) => {
  * @param {*} request - The request object.
  * @param {*} response - The response object.
  */
-export const sendCodeById = (request, response) => {
-	const code = findById(request.params.id);
+export const sendCodeById = async (request, response) => {
+	const code = await VerificationCode.findById(request.params.id);
 	response.json(code);
 };
