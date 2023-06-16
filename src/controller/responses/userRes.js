@@ -22,3 +22,13 @@ export const sendUserById = async (request, response) => {
 	response.json(user);
 };
 
+/**
+ * Sends a verification code by its email as a JSON response.
+ *
+ * @param {*} request - The request object.
+ * @param {*} response - The response object.
+ */
+export const sendCodeByEmail = async (request, response) => {
+	const code = await VerificationCode.find({ email: request.params.email });
+	response.json(code);
+};
