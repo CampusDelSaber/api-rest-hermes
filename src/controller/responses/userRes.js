@@ -22,13 +22,3 @@ export const sendUserById = async (request, response) => {
 	response.json(user);
 };
 
-/**
- * Sends a user by its email as a JSON response.
- *
- * @param {*} request - The request object.
- * @param {*} response - The response object.
- */
-export const sendUserByEmail = async (request, response) => {
-	const user = await User.find({ email: request.params.email });
-	response.json(user);
-};
