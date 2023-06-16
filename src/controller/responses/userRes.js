@@ -23,12 +23,12 @@ export const sendUserById = async (request, response) => {
 };
 
 /**
- * Sends a verification code by its email as a JSON response.
+ * Sends a user by its email as a JSON response.
  *
  * @param {*} request - The request object.
  * @param {*} response - The response object.
  */
-export const sendCodeByEmail = async (request, response) => {
-	const code = await VerificationCode.find({ email: request.params.email });
-	response.json(code);
+export const sendUserByEmail = async (request, response) => {
+	const user = await User.find({ email: request.params.email });
+	response.json(user);
 };
