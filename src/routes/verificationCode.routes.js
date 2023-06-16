@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
 	sendAllCodes,
+	sendCodeByEmail,
 	sendCodeById
 } from '../controller/responses/verificationCodeRes.js';
 import {
@@ -14,6 +15,8 @@ const codeRouter = Router();
 codeRouter.get('/verificationCodes', sendAllCodes);
 
 codeRouter.get('/verificationCodes/:id', sendCodeById);
+
+codeRouter.get('/verificationCodes/email/:email', sendCodeByEmail);
 
 codeRouter.post('/verificationCodes', saveNewCode);
 
