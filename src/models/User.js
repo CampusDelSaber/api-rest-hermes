@@ -15,7 +15,7 @@ const UserSchema = new Schema(
 			required: true
 		},
 		type: {
-			type: Boolean,
+			type: String,
 			required: true
 		}
 	},
