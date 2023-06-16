@@ -7,10 +7,12 @@ const VerificationCodeSchema = new Schema(
 			required: true
 		},
 		verificationCode: {
-			type: String
+			type: String,
+			required: true
 		},
 		isValid: {
-			type: Boolean
+			type: Boolean,
+			required: true
 		}
 	},
 	{

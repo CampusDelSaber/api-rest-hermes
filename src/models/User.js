@@ -7,13 +7,16 @@ const UserSchema = new Schema(
 			required: true
 		},
 		fullName: {
-			type: String
+			type: String,
+			required: true
 		},
 		userName: {
-			type: String
+			type: String,
+			required: true
 		},
-		isValid: {
-			type: Boolean
+		type: {
+			type: Boolean,
+			required: true
 		}
 	},
 	{
