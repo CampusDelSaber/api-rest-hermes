@@ -27,7 +27,7 @@ export const sendIncidents = async (request, response) => {
 
 	const incidents =
 		longitude && latitude && radius
-			? await getNearIncidents(longitude, latitude, radius)
+			? await getNearIncidents(type, longitude, latitude, radius)
 			: await getAllIncidents(type);
 
 	response.json(incidents);
@@ -53,7 +53,7 @@ const getAllIncidents = async (type) => {
  * @param {number} radius - The radius in which to search for incidents.
  * @returns {Array} - The array of nearby incidents.
  */
-const getNearIncidents = async (longitude, latitude, radius) => {
+const getNearIncidents = async (type, longitude, latitude, radius) => {
 	try {
 		const referenceCoordinate = [parseFloat(longitude), parseFloat(latitude)];
 		const maxDistanceRadius = parseFloat(radius);
@@ -61,9 +61,14 @@ const getNearIncidents = async (longitude, latitude, radius) => {
 			$near: referenceCoordinate,
 			$maxDistance: maxDistanceRadius
 		};
-		return await Incident.find({
-			'geometry.coordinates': nearIncidentQuery
-		});
+		return type
+			? await Incident.find({
+					type,
+					'geometry.coordinates': nearIncidentQuery
+			  })
+			: await Incident.find({
+					'geometry.coordinates': nearIncidentQuery
+			  });
 	} catch (err) {
 		return [];
 	}
