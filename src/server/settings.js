@@ -12,7 +12,7 @@ import sendEmailRoute from '../routes/sendEmail.routes.js';
 const serverApp = express();
 dotenv.config();
 
-serverApp.set('port', process.env.PORT || 4055);
+serverApp.set('port', process.env.PORT || 4000);
 serverApp.use(cors());
 serverApp.use(express.json());
 serverApp.use(indexRouter);
