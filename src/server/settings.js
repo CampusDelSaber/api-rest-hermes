@@ -7,6 +7,7 @@ import incidentRouter from '../routes/incident.routes.js';
 import userRouter from '../routes/user.routes.js';
 import codeRouter from '../routes/verificationCode.routes.js';
 import { routeNotFound } from '../controller/responses/indexRes.js';
+import sendEmailRoute from '../routes/sendEmail.routes.js';
 
 const serverApp = express();
 dotenv.config();
@@ -18,6 +19,7 @@ serverApp.use(indexRouter);
 serverApp.use(incidentRouter);
 serverApp.use(userRouter);
 serverApp.use(codeRouter);
+serverApp.use(sendEmailRoute)
 serverApp.use(routeNotFound);
 
 export default serverApp;
