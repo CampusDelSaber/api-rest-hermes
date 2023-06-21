@@ -69,8 +69,8 @@ const getNearIncidents = async (types, longitude, latitude, radius) => {
 			: await Incident.find({
 					'geometry.coordinates': nearIncidentQuery
 			  });
-	} catch (err) {
-		return [];
+	} catch (error) {
+		console.log(error);
 	}
 };
 
