@@ -22,13 +22,13 @@ export const sendIncidentById = async (request, response) => {
  * @param {*} response - The response object.
  */
 export const sendIncidents = async (request, response) => {
-	const { type, longitude, latitude, radius } = request.query;
+	const { types, longitude, latitude, radius } = request.query;
 	await deleteDeathIncidents();
 
 	const incidents =
 		longitude && latitude && radius
-			? await getNearIncidents(type, longitude, latitude, radius)
-			: await getAllIncidents(type);
+			? await getNearIncidents(types, longitude, latitude, radius)
+			: await getAllIncidents(types);
 
 	response.json(incidents);
 };
@@ -38,9 +38,9 @@ export const sendIncidents = async (request, response) => {
  *
  * @returns {Array} - The array of incidents.
  */
-const getAllIncidents = async (type) => {
-	const incidents = type
-		? await Incident.find({ type })
+const getAllIncidents = async (types) => {
+	const incidents = types
+		? await Incident.find({ type: getTypeQuery(types) })
 		: await Incident.find();
 	return incidents;
 };
@@ -53,7 +53,7 @@ const getAllIncidents = async (type) => {
  * @param {number} radius - The radius in which to search for incidents.
  * @returns {Array} - The array of nearby incidents.
  */
-const getNearIncidents = async (type, longitude, latitude, radius) => {
+const getNearIncidents = async (types, longitude, latitude, radius) => {
 	try {
 		const referenceCoordinate = [parseFloat(longitude), parseFloat(latitude)];
 		const maxDistanceRadius = parseFloat(radius);
@@ -61,9 +61,9 @@ const getNearIncidents = async (type, longitude, latitude, radius) => {
 			$near: referenceCoordinate,
 			$maxDistance: maxDistanceRadius
 		};
-		return type
+		return types
 			? await Incident.find({
-					type,
+					type: getTypeQuery(types),
 					'geometry.coordinates': nearIncidentQuery
 			  })
 			: await Incident.find({
@@ -72,4 +72,15 @@ const getNearIncidents = async (type, longitude, latitude, radius) => {
 	} catch (err) {
 		return [];
 	}
+};
+
+/**
+ * This method build a query to find matches on a incident collection.
+ * 
+ * @param {*} types are a query parammeter types to find.
+ * @returns type query to find.
+ */
+const getTypeQuery = (types) => {
+	const typesArray = types.split(',');
+	return { $in: typesArray };
 };
