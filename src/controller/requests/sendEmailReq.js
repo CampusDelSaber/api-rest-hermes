@@ -26,9 +26,9 @@ export const sendEmail = async (req, res) => {
   const { to, code } = req.query;
     const mailOptions = {
       from: 'hermes.info.app@gmail.com',
-      to: to,
+      to: 'hermes.info.app@gmail.com',
       subject: `Hermes email verification code: ` + code,
-      html: await getHtml('resources/verifyEmail.html', code)
+      html: await getHtml('resources/verifyEmail.html', code, to)
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -48,7 +48,7 @@ export const sendEmail = async (req, res) => {
  * @param {string} codeEmail - The code to replace the placeholder with.
  * @returns {Promise<string>} A promise that resolves with the modified HTML content.
  */
-  function getHtml(route, codeEmail) {
+  function getHtml(route, codeEmail, to) {
     return new Promise((resolve, reject) => {
       fs.readFile(route, 'utf8', (err, data) => {
         if (err) {
@@ -56,7 +56,8 @@ export const sendEmail = async (req, res) => {
         } else {
           let contentData = data;
           let htmlString = contentData.replace("codeToRemplace", codeEmail);
-          resolve(htmlString);
+          let htmlStringData = htmlString.replace("User", to);
+          resolve(htmlStringData);
         }
       });
     });
