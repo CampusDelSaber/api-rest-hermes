@@ -2,15 +2,20 @@ import { Schema, model } from 'mongoose';
 
 const UserSchema = new Schema(
 	{
-		email: {
-			type: String,
-			required: true
-		},
 		fullName: {
 			type: String,
 			required: true
 		},
+		email: {
+			type: String,
+			required: true
+		},
+		
 		userName: {
+			type: String,
+			required: true
+		},
+		pathImageUser: {
 			type: String,
 			required: true
 		},
@@ -18,6 +23,7 @@ const UserSchema = new Schema(
 			type: String,
 			required: true
 		}
+		
 	},
 	{
 		versionKey: false
